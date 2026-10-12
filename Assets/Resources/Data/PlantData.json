@@ -1,0 +1,27 @@
+[
+  {
+    "id" : 1,
+    "item_id": 21,
+    "harvest_id": 33,
+    "harvest_amount": 2,
+    "name" : "南瓜种子",
+    "prefab_name": "pumpkin_seed",
+    "state_count": 3,
+    "timePerStage": [2, 5],
+    "seed_type": "PumpkinSeed"
+  },
+
+  {
+    "id" : 2,
+    "item_id": 22,
+    "harvest_id": 32,
+    "harvest_amount": 1,
+    "name" : "西红柿种子",
+    "prefab_name": "tomato_seed",
+    "state_count": 3,
+    "timePerStage": [3, 5],
+    "seed_type": "TomatoSeed"
+
+  }
+]
+

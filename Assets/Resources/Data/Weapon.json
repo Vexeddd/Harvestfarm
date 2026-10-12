@@ -1,0 +1,22 @@
+[
+  {
+    "id": "gun_01",
+    "item_id": 200,
+    "name": "农用手枪",
+    "weapon_type": "Pistol",
+    "bullet_type": "Bullet_9mm",
+    "bullet_id":  201, 
+    "ammo_size": 10,
+    "fire_mode": "Semi",
+    "can_switch_fireMode": false,
+    "ballistic_type": "Ranged",
+    "damage": 10,
+    "crit_rate": 0.3,
+    "crit_multiplier": 2.0,
+    "arrow_speed": 100,
+    "attack_cooldown": 0.3,
+    "reload_time": 1.5,
+    "ads_zoom": 1.3,
+    "ads_move_speed": 0.6
+  }
+]
