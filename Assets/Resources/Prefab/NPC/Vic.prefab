@@ -41,7 +41,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &205365278704715399
 Animator:
-  serializedVersion: 7
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -49,13 +49,12 @@ Animator:
   m_GameObject: {fileID: 10580291927216366}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 0125309e38bea8a48bc578cf8f220634, type: 3}
-  m_Controller: {fileID: 9100000, guid: b3363c704910f8e4c9b0683c33319f1b, type: 2}
+  m_Controller: {fileID: 9100000, guid: b90b1d3a0b8b3fd43ba1ee5f91a1fc4c, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1

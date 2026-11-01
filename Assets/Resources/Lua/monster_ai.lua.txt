@@ -1,0 +1,133 @@
+-- 怪物 AI 状态机（逻辑层下放到 Lua）。
+-- 调用链：
+--   EnemyBase.Start  -> LuaMgr.CreateMonsterAI -> 本文件 new(enemy)
+--   EnemyBase.Update -> LuaMgr.TickMonsterAI   -> 本文件 update(dt)
+--   受击 / 死亡       -> LuaMgr.MonsterOnHurt / MonsterOnDead -> on_damage / on_dead
+--   状态内逻辑        -> CS.MonsterApi.xxx(enemy, ...) 调用 C# 引擎原语。
+
+local MonsterApi = CS.MonsterApi
+
+local MonsterAI = {}
+MonsterAI.__index = MonsterAI
+
+-- ===== 状态定义 =====
+-- 状态只放 enter / update / exit 函数；可变数据（计时、巡逻点等）挂在 self 上，每个怪物独立。
+
+local States = {}
+
+-- 巡逻
+States.Patrol = {}
+function States.Patrol.enter(self)
+    self.origin = MonsterApi.GetPosition(self.enemy)
+    self.patrolTarget = MonsterApi.GetRandomPatrolPoint(self.enemy, self.origin, 3.0)
+    MonsterApi.SetAnimRun(self.enemy, 0.5)
+end
+function States.Patrol.update(self, dt)
+    local enemy = self.enemy
+    if MonsterApi.CanSeePlayer(enemy) then
+        self:change("Chase")
+        return
+    end
+    MonsterApi.RotateTowards(enemy, self.patrolTarget)
+    MonsterApi.MoveTowards(enemy, self.patrolTarget, 1.5)
+    if MonsterApi.DistanceTo(enemy, self.patrolTarget) <= 0.4 then
+        self.patrolTarget = MonsterApi.GetRandomPatrolPoint(enemy, self.origin, 3.0)
+    end
+end
+function States.Patrol.exit(self) end
+
+-- 追击
+States.Chase = {}
+function States.Chase.enter(self)
+    MonsterApi.SetAnimRun(self.enemy, 1.0)
+end
+function States.Chase.update(self, dt)
+    local enemy = self.enemy
+    if not MonsterApi.CanSeePlayer(enemy) then
+        self:change("Patrol")
+        return
+    end
+    if MonsterApi.CanAttack(enemy) then
+        self:change("Attack")
+        return
+    end
+    local target = MonsterApi.GetPlayerPosition(enemy)
+    MonsterApi.RotateTowards(enemy, target)
+    MonsterApi.MoveTowards(enemy, target, 3.0)
+end
+function States.Chase.exit(self) end
+
+-- 攻击
+States.Attack = {}
+function States.Attack.enter(self)
+    MonsterApi.SetAnimRun(self.enemy, 0)
+    MonsterApi.SetAnimTrigger(self.enemy, "Attack")
+    self.timer = 1.65
+    MonsterApi.MarkAttackTime(self.enemy)
+end
+function States.Attack.update(self, dt)
+    self.timer = self.timer - dt
+    if self.timer <= 0 then
+        self:change("Chase")
+    end
+end
+function States.Attack.exit(self) end
+
+-- 受击
+States.Hurt = {}
+function States.Hurt.enter(self)
+    MonsterApi.SetAnimRun(self.enemy, 0)
+    self.timer = 1.0
+end
+function States.Hurt.update(self, dt)
+    self.timer = self.timer - dt
+    if self.timer <= 0 then
+        self:change("Chase")
+    end
+end
+function States.Hurt.exit(self) end
+
+-- 死亡
+States.Dead = {}
+function States.Dead.enter(self)
+    MonsterApi.SetAnimTrigger(self.enemy, "Dead")
+    MonsterApi.StartRemoveBody(self.enemy)
+end
+function States.Dead.update(self, dt) end
+function States.Dead.exit(self) end
+
+-- ===== 控制器 =====
+function MonsterAI.new(enemy)
+    local self = setmetatable({}, MonsterAI)
+    self.enemy = enemy
+    self.current = nil
+    self:change("Patrol")
+    return self
+end
+
+function MonsterAI:change(name)
+    local nextState = States[name]
+    if self.current then
+        self.current.exit(self)
+    end
+    self.current = nextState
+    if self.current then
+        self.current.enter(self)
+    end
+end
+
+function MonsterAI:update(dt)
+    if self.current then
+        self.current.update(self, dt)
+    end
+end
+
+function MonsterAI:on_damage(damage)
+    self:change("Hurt")
+end
+
+function MonsterAI:on_dead()
+    self:change("Dead")
+end
+
+return MonsterAI

@@ -5,26 +5,26 @@ using UnityEngine;
 using UnityEngine.Events;
 
 
-public interface IEventInfo
+public interface IEventAction
 {
 
 }
 
-public class EventInfo : IEventInfo
+public class EventAction : IEventAction
 {
     public UnityAction actions;
 
-    public EventInfo(UnityAction action)
+    public EventAction(UnityAction action)
     {
         actions = action;
     }
 }
 
-public class EventInfo<T> : IEventInfo
+public class EventAction<T> : IEventAction
 {
     public UnityAction<T> actions;
 
-    public EventInfo(UnityAction<T> action)
+    public EventAction(UnityAction<T> action)
     {
         actions = action;
     }
@@ -37,7 +37,7 @@ public class EventCenter : BaseManager<EventCenter>
 
     }
 
-    private Dictionary<string, IEventInfo> eventDic = new Dictionary<string, IEventInfo>();
+    private Dictionary<string, IEventAction> eventDic = new Dictionary<string, IEventAction>();
 
 
     public void AddEventListener(string name, UnityAction action)
@@ -45,12 +45,12 @@ public class EventCenter : BaseManager<EventCenter>
         if (eventDic.ContainsKey(name))
         {
             //eventDic[name] += action;
-            (eventDic[name] as EventInfo).actions += action;
+            (eventDic[name] as EventAction).actions += action;
         }
         else
         {
             //eventDic.Add(name, action);
-            eventDic.Add(name, new EventInfo(action));
+            eventDic.Add(name, new EventAction(action));
         }
     }
 
@@ -59,12 +59,12 @@ public class EventCenter : BaseManager<EventCenter>
         if (eventDic.ContainsKey(name))
         {
             //eventDic[name] += action;
-            (eventDic[name] as EventInfo<T>).actions += action;
+            (eventDic[name] as EventAction<T>).actions += action;
         }
         else
         {
             //eventDic.Add(name, action);
-            eventDic.Add(name, new EventInfo<T>(action));
+            eventDic.Add(name, new EventAction<T>(action));
         }
     }
 
@@ -74,7 +74,7 @@ public class EventCenter : BaseManager<EventCenter>
         if (eventDic.ContainsKey(name))
         {
             //eventDic[name] -= action;
-            (eventDic[name] as EventInfo).actions -= action;
+            (eventDic[name] as EventAction).actions -= action;
         }
     }
 
@@ -83,7 +83,7 @@ public class EventCenter : BaseManager<EventCenter>
         if (eventDic.ContainsKey(name))
         {
             //eventDic[name] -= action;
-            (eventDic[name] as EventInfo<T>).actions -= action;
+            (eventDic[name] as EventAction<T>).actions -= action;
         }
     }
 
@@ -93,7 +93,7 @@ public class EventCenter : BaseManager<EventCenter>
         if (eventDic.ContainsKey(name))
         {
             //eventDic[name].Invoke(info); 
-            (eventDic[name] as EventInfo).actions.Invoke();
+            (eventDic[name] as EventAction).actions.Invoke();
         }
     }
 
@@ -102,7 +102,7 @@ public class EventCenter : BaseManager<EventCenter>
         if (eventDic.ContainsKey(name))
         {
             //eventDic[name].Invoke(info); 
-            (eventDic[name] as EventInfo<T>).actions?.Invoke(info);
+            (eventDic[name] as EventAction<T>).actions?.Invoke(info);
         }
     }
 

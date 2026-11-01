@@ -5,9 +5,9 @@
     "prefab_name": "Mary",
     "npc_type": "Mary",
     "location": {
-      "x": 24.129,
-      "y": 0.08,
-      "z": -3.457
+      "x": 3,
+      "y": 0.146,
+      "z": -4.11
     },
     "name": "玛丽",
     "gender": "Male",
@@ -117,9 +117,9 @@
     "npc_type": "Rode",
     "name": "罗德",
     "location": {
-      "x": 20,
-      "y": 0.08,
-      "z": -8
+      "x": -10.51,
+      "y": 0.146,
+      "z": -4.51
     },
     "gender": "Male",
     "birthday": "Spring-14",
@@ -230,7 +230,7 @@
     "gender": "Male",
     "location": {
       "x": -18,
-      "y": 0.08,
+      "y": 0.146,
       "z": 10
     },
     "birthday": "Spring-14",

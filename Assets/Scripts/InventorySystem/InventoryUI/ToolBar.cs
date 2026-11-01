@@ -42,7 +42,7 @@ public class ToolBar : InventoryContainer
         }
 
         var item = slotList[selectedIndex].bindItem;
-        if (item != null && item.itemData.item_type == ItemType.Food && Input.GetMouseButtonDown(1))
+        if (item != null && item.itemData.item_type == ItemType.Food && Input.GetKeyDown(KeyCode.E))
         {
             //ŒÔ∆∑ºı…Ÿ
             item.SetItemAmount(item.itemData.current_stack - 1);

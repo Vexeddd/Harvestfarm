@@ -1,13 +1,10 @@
-
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.EventSystems.EventTrigger;
-using static UnityEngine.UI.Image;
+using XLua;
 
 public class EnemyBase : MonoBehaviour, IDamageable
 {
-    public StateMachine stateMachine;
+    private LuaTable _ai;   // Lua ä¾§æ€ªç‰© AI çŠ¶æ€æœºæ§åˆ¶å™¨
 
     public int monsterId = 1;
     //MonsterData ....
@@ -15,56 +12,46 @@ public class EnemyBase : MonoBehaviour, IDamageable
     public float HP = 100;
     public float Damage = 15;
     public float Crit_rate = 0.2f;
-    public static float attackCooldown = 2f; //¹¥»÷¼ä¸ô
-    public float laskAttackTime = -attackCooldown; //×îºóÒ»´Î¹¥»÷µÄÊ±¼ä
+    public static float attackCooldown = 2f; //æ”»å‡»å†·å´
+    public float laskAttackTime = -attackCooldown; //æœ€åä¸€æ¬¡æ”»å‡»çš„æ—¶é—´
     public float attackRange = 2f;
 
     public bool isDead = false;
 
     public Animator _animator;
-    //public string runHash;
-    //public string idleHash;
-    //public string attackHash;
+
+    public StateMachine stateMachine;
 
     private void Awake()
     {
         _animator = this.GetComponent<Animator>();
     }
 
-    // Start is called before the first frame update
     void Start()
     {
         _animator.SetFloat("Run", 0);
 
-        stateMachine = new StateMachine();
-
-        stateMachine.InitMonsterStates(this);
-        stateMachine.ChangeState(MonsterStateType.Patrol);
+        // çŠ¶æ€æœºå·² Lua åŒ–ï¼šLua ä¾§è´Ÿè´£çŠ¶æ€åˆ‡æ¢ / æ¡ä»¶ / è®¡æ—¶ï¼Œè¿™é‡Œåªæ‹¿åˆ°æ§åˆ¶å™¨å¥æŸ„
+        _ai = LuaMgr.Instance.CreateMonsterAI(this);
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if (isDead)
-        {
-            return;
-        }
-        if (stateMachine != null)
-        {
-            stateMachine.currentState.OnUpdate();
-        }
+        if (isDead) return;
+
+        // æ¯å¸§é©±åŠ¨ Lua çŠ¶æ€æœºï¼ˆé€»è¾‘åœ¨ monster_ai.luaï¼‰
+        LuaMgr.Instance.TickMonsterAI(_ai, Time.deltaTime);
     }
 
     public void ApplyDamage(float damage)
     {
-        print("±»»÷ÖĞÁË");
+        print("å—åˆ°ä¼¤å®³");
         HP = Mathf.Max(HP - damage, 0);
 
-        //²¥·ÅÒôĞ§
+        //å—å‡»éŸ³æ•ˆ
         MusicManager.Instance.PlayOneShot(MusicType.MonsterHurt);
 
-
-        stateMachine.ChangeState(MonsterStateType.Hurt);
+        LuaMgr.Instance.MonsterOnHurt(_ai, damage);
 
         if (HP <= 0 && !isDead)
         {
@@ -74,9 +61,9 @@ public class EnemyBase : MonoBehaviour, IDamageable
 
     public void Dead()
     {
-        //Debug.Log("ËÀÁË");
         isDead = true;
-        stateMachine.ChangeState(MonsterStateType.Dead);
+
+        LuaMgr.Instance.MonsterOnDead(_ai);
 
         QuestManager.Instance.ReportAction(QuestType.KillMonster, monsterId.ToString());
     }
@@ -84,13 +71,13 @@ public class EnemyBase : MonoBehaviour, IDamageable
     public bool CanSeePlayer()
     {
         Vector3 toPlayer = GetPlayerDir();
-        //ÈıÃ×ÒÔÄÚÌıµ½
+        //è·ç¦»å¾ˆè¿‘ç›´æ¥çœ‹åˆ°
         if (toPlayer.magnitude <= 3f)
         {
             return true;
         }
 
-        //ÈıÃ×µ½ÎåÃ×¿´µ½
+        //è·ç¦»ä¸­ç­‰åˆ™çœ‹è§†é‡è§’
         if (toPlayer.magnitude <= 8f)
         {
             Vector3 flatDir = toPlayer;
@@ -100,7 +87,7 @@ public class EnemyBase : MonoBehaviour, IDamageable
             float cosHalf = Mathf.Cos(90f * 0.5f * Mathf.Deg2Rad);
             if (dot < cosHalf) return false;
 
-            // 3. ÊÓÏßÕÚµ²¼ì²â
+            // 3. æ˜¯å¦æœ‰ç‰©ä½“é®æŒ¡
             if (Physics.Raycast(transform.position + Vector3.up * 1.5f, toPlayer.normalized, out RaycastHit hit, toPlayer.magnitude))
             {
                 if (!hit.collider.CompareTag("Player")) return false;
@@ -114,8 +101,8 @@ public class EnemyBase : MonoBehaviour, IDamageable
 
     public Vector3 GetPlayerDir()
     {
-        Vector3 origin = transform.position + Vector3.up * 1.5f;        // ¹ÖÎïÑÛ¾¦¸ß¶È
-        Vector3 target = Player.Instance.transform.position + Vector3.up * 1.0f;     // Íæ¼ÒĞØ¿Ú
+        Vector3 origin = transform.position + Vector3.up * 1.5f;        // æ€ªç‰©çœ¼ç›é«˜åº¦
+        Vector3 target = Player.Instance.transform.position + Vector3.up * 1.0f;     // ç©å®¶èƒ¸å£
         Vector3 toPlayer = target - origin;
 
         return toPlayer;
@@ -161,4 +148,15 @@ public class EnemyBase : MonoBehaviour, IDamageable
         return dmg;
     }
 
+    // æ­»äº¡åå»¶æ—¶ç§»é™¤å°¸ä½“ï¼ˆåŸ MonsterDeadState.RemoveBody ç§»åˆ°è¿™é‡Œï¼Œä¾› Lua è°ƒç”¨ï¼‰
+    public IEnumerator RemoveBody()
+    {
+        //å…ˆç§»é™¤ç¢°æ’ä½“
+        yield return new WaitForSeconds(3f);
+        GameObject.Destroy(GetComponent<Collider>());
+
+        //å†æŠŠå°¸ä½“ç§»é™¤
+        yield return new WaitForSeconds(3f);
+        GameObject.Destroy(gameObject);
+    }
 }

@@ -17,7 +17,7 @@
         {
           "type": "GiveQuest",
           "body": {
-            "quest_id": "MAIN_01_Dialog",
+            "quest_id": "MAIN_01_TALK_MARY",
             "title": "初来小镇",
             "steps": [
               {
@@ -120,118 +120,7 @@
       "onComplete": {
       }
     },
-    {
-      "segment_id": "SEGMENT_02_TOOL",
-      "title": "任务后的剧情段",
-      "nodes": [
-        {
-          "type": "GiveQuest",
-          "body": {
-            "quest_id": "MAIN_01_Dialog",
-            "title": "学会劳动",
-            "steps": [
-              {
-                "id": "dialog",
-                "desc": "Mary有新任务了",
-                "type": "TalkToNPC",
-                "required_count": 1,
-                "target_id": "Mary"
-              }
-            ]
-          }
-        },
-        {
-          "type": "Dialogue",
-          "body": {
-            "npc": "Mary",
-            "dialogue_id": "3",
-            "lines": [
-              "哦？",
-              "新人？",
-              "你手上什么都没有。",
-              "那你什么都干不了。",
-              "别指望别人一直救你。",
-              "资源在外面。",
-              "工具在你手里。",
-              "学会做东西。",
-              "不然你迟早会消失。",
-              "就像其他人一样。"
-            ]
-          }
-        },
-        {
-          "type": "GiveQuest",
-          "body": {
-            "quest_id": "MAIN_03_TOOL",
-            "title": "学会劳动",
-            "steps": [
-              {
-                "id": "buy_item",
-                "desc": "购买 1 个石斧",
-                "type": "BuyItem",
-                "required_count": 1,
-                "target_id": 6
-              }
-            ],
-            "steps_bak": [
-              {
-                "id": "gather_wood",
-                "desc": "收集 5 个木材",
-                "type": "CollectItem",
-                "required_count": 5,
-                "target_id": 102
-              },
-              {
-                "id": "gather_rock",
-                "desc": "收集 3 个石头",
-                "type": "CollectItem",
-                "required_count": 3,
-                "target_id": 100
-              },
-              {
-                "id": "gather_rock",
-                "desc": "制作 1 个石斧",
-                "type": "CraftItem",
-                "required_count": 1,
-                "target_id": 6
-              }
-            ]
-          }
-        },
-        {
-          "type": "GiveQuest",
-          "body": {
-            "quest_id": "MAIN_01_Dialog",
-            "title": "初来小镇",
-            "steps": [
-              {
-                "id": "dialog",
-                "desc": "找Mary对话",
-                "type": "TalkToNPC",
-                "required_count": 1,
-                "target_id": "Mary"
-              }
-            ]
-          }
-        },
-        {
-          "type": "Dialogue",
-          "body": {
-            "npc": "Mary",
-            "dialogue_id": "3",
-            "lines": [
-              "看，这就是工具！你可以用它来砍树了。",
-              "不漂亮，但能救命。",
-              "文明不是奇迹，是一次次重复。"
-            ]
-          }
-        }
-      ],
-      "next_segment": "SEGMENT_03_DANGER",
-      "onComplete": {
-        "next_segment": "SEGMENT_03_DANGER"
-      }
-    },
+
     {
       "segment_id": "SEGMENT_03_DANGER",
       "title": "任务后的剧情段",
@@ -239,8 +128,8 @@
         {
           "type": "GiveQuest",
           "body": {
-            "quest_id": "MAIN_01_Dialog",
-            "title": "初来小镇",
+            "quest_id": "MAIN_03_TALK_RODE",
+            "title": "危机四伏",
             "steps": [
               {
                 "id": "dialog",
@@ -278,6 +167,7 @@
               { "item_id": 200, "count": 1 },
               { "item_id": 201, "count": 30 }
             ],
+            "title": "危机四伏",
             "steps": [
               {
                 "id": "kill_monster",
@@ -292,8 +182,8 @@
         {
           "type": "GiveQuest",
           "body": {
-            "quest_id": "MAIN_01_Dialog",
-            "title": "初来小镇",
+            "quest_id": "MAIN_03_TALK_RODE_2",
+            "title": "交付任务",
             "steps": [
               {
                 "id": "dialog",
@@ -330,7 +220,7 @@
         {
           "type": "GiveQuest",
           "body": {
-            "quest_id": "MAIN_01_Dialog",
+            "quest_id": "MAIN_04_TALK_VIC",
             "title": "初来小镇",
             "steps": [
               {
@@ -388,7 +278,7 @@
         {
           "type": "GiveQuest",
           "body": {
-            "quest_id": "MAIN_01_Dialog",
+            "quest_id": "MAIN_05_TALK_VIC",
             "title": "初来小镇",
             "steps": [
               {

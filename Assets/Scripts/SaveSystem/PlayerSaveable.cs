@@ -16,13 +16,15 @@ public class PlayerSaveable : ISaveable
     {
         if (Player.Instance == null) return;
 
-        Player.Instance.transform.position = new Vector3(data.px, data.py, data.pz);
+        var rb = Player.Instance._rb;
+        if (rb == null) return;
+
+        // Write the physics body's position (not transform.position), so a
+        // FixedUpdate can't overwrite the teleport with the body's stale position.
+        rb.position = new Vector3(data.px, data.py, data.pz);
 
         // Clear carried physics velocity so the teleport does not cause a lurch.
-        if (Player.Instance._rb != null)
-        {
-            Player.Instance._rb.velocity = Vector3.zero;
-            Player.Instance._rb.angularVelocity = Vector3.zero;
-        }
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
     }
 }

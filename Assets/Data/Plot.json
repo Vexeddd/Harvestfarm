@@ -236,7 +236,7 @@
           "type": "GiveQuest",
           "body": {
             "quest_id": "MAIN_01_Dialog",
-            "title": "初来小镇",
+            "title": "危机四伏",
             "steps": [
               {
                 "id": "dialog",
@@ -270,10 +270,11 @@
           "type": "GiveQuest",
           "body": {
             "quest_id": "MAIN_04_DANGER",
+            "title": "危机四伏",
             "steps": [
               {
                 "id": "kill_monster",
-                "desc": "击杀 3 个游荡怪物",
+                "desc": "击杀 1 个游荡怪物",
                 "type": "KillMonster",
                 "required_count": 1,
                 "target_id": 1
@@ -285,7 +286,7 @@
           "type": "GiveQuest",
           "body": {
             "quest_id": "MAIN_01_Dialog",
-            "title": "初来小镇",
+            "title": "交付任务",
             "steps": [
               {
                 "id": "dialog",
@@ -323,7 +324,7 @@
           "type": "GiveQuest",
           "body": {
             "quest_id": "MAIN_01_Dialog",
-            "title": "初来小镇",
+            "title": "新的工作",
             "steps": [
               {
                 "id": "dialog",
@@ -357,6 +358,7 @@
           "type": "GiveQuest",
           "body": {
             "quest_id": "MAIN_06_BUNKER",
+            "title": "新的工作",
             "steps": [
               {
                 "id": "activate_device",
@@ -381,7 +383,7 @@
           "type": "GiveQuest",
           "body": {
             "quest_id": "MAIN_01_Dialog",
-            "title": "初来小镇",
+            "title": "交付任务",
             "steps": [
               {
                 "id": "dialog",
